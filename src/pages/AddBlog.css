@@ -1,0 +1,9 @@
+#addBookBG {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    box-sizing: border-box;
+    background: #C6FFDD;
+    background: -webkit-linear-gradient(to right, #8ab8ec, #d9fe9d, #C6FFDD);
+    background: linear-gradient(to right, #9dc4ee, #e0cda1, #ebade5);
+}

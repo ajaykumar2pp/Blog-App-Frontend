@@ -1,0 +1,15 @@
+.image-container {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .zoom-effect {
+    transition: transform 0.3s ease-in-out;
+   cursor: pointer;
+  }
+
+  .zoom-effect:hover {
+    transform: scale(1.1); 
+
+  }

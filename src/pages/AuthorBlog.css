@@ -1,0 +1,16 @@
+.btn-setting {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease; 
+
+}
+
+.card-btn:hover .btn-setting {
+    display: inline-block;
+    opacity: 1
+
+}
+.options-list{
+  right: 5px;
+  top: 195px;
+}
