@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/blogAPI";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../pages/AddBlog.css';
 
 const AddBlog = () => {
@@ -70,12 +72,16 @@ const AddBlog = () => {
         }
       });
 
-      console.log(response.data);
-      alert("Blog Add");
-
+      // console.log(response.data);
+      // alert("Blog Add");
+      toast.success("Blog Add");
       navigate("/all-blog");
     } catch (error) {
       console.error("Error during API call:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+      toast.error("Failed to add blog");
     }
     // Reset the form inputs
     setBlogTitle("");
@@ -106,7 +112,7 @@ const AddBlog = () => {
                   id="name"
                   name="blogTitle"
                   placeholder="Enter Blog Title"
-                  aria-describedby="blogName"
+                  aria-describedby="blogTitle"
                   value={blogTitle}
                   onChange={(e) => setBlogTitle(e.target.value)}
                 />

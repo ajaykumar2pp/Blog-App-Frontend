@@ -16,7 +16,7 @@ const Home = () => {
                                     Welcome to our online blog haven, where pages come to life and stories unfold. Immerse yourself in a world of literary wonders, where every genre is a journey waiting to be explored. From gripping tales of adventure to soul-stirring narratives of love and wisdom, our curated collection awaits your discovery.
                                 </p>
                                 <div className="text-center">
-                                    <Link to="/blog/add-block" className="btn btn-primary">
+                                    <Link to="/blog/add-blog" className="btn btn-primary">
                                         Create Your Blog
                                     </Link>
                                     <Link to="/" className="btn btn-outline-danger fs-5 text-inherit ms-5 ">

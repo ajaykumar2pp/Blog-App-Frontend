@@ -16,7 +16,7 @@ const Login = () => {
   const isAuthenticated  = !!localStorage.getItem("user");
   useEffect(() => {
     if (isAuthenticated ) {
-      navigate("/all-book");
+      navigate("/all-blog");
     }
   }, [navigate ,isAuthenticated]);
 
@@ -40,7 +40,7 @@ const Login = () => {
         // console.log(response.data.data.user);
         toast.success('User Login Successfully!');
         localStorage.setItem("user", JSON.stringify(response.data.data.user));
-        navigate("/all-book");
+        navigate("/all-blog");
       } catch (error) {
         if (error.response) {
           if (error.response.status === 404) {
