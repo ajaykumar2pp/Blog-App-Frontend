@@ -72,7 +72,7 @@ const AddBlog = () => {
         }
       });
 
-      // console.log(response.data);
+      console.log(response.data);
       // alert("Blog Add");
       toast.success("Blog Add");
       navigate("/all-blog");

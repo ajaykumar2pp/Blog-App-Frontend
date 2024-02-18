@@ -64,6 +64,15 @@ const BlogListing = () => {
     setSelectedCategory(e.target.value);
   };
 
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+  };
+
+  const handleAllCategoryClick = () => {
+    setSelectedCategory("All");
+  };
+  
+
   const formatCategory = (category) => {
     return category.replace(/["\[\]]/g, '');
   };
@@ -82,6 +91,29 @@ const BlogListing = () => {
             </div>
           </div>
 
+          <div className="row">
+            <div className="col-md-12">
+              <div className=" mb-5">
+              <button
+            className="p-2 m-3 text-bg-danger fw-bold rounded rounded-2"
+            onClick={handleAllCategoryClick} // Handle click for "All" category
+          >
+            All
+          </button>
+                {categories.map(category => (
+                  <button
+                    className="p-2 m-3 text-bg-danger fw-bold rounded rounded-2"
+                    key={category}
+                    value={category}
+                    onClick={() => handleCategoryClick(category)}
+                    >
+                    {formatCategory(category)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {categories.length > 0 && (
             <div className="row d-flex justify-content-center">
               <div className="col-md-6 mb-4">
@@ -94,8 +126,8 @@ const BlogListing = () => {
                   <option value="All">All</option>
                   {categories.map(category => (
                     <option key={category} value={category}>
-                       {formatCategory(category)}
-                       {/* {category} */}
+                      {formatCategory(category)}
+                      {/* {category} */}
                     </option>
                   ))}
                 </select>

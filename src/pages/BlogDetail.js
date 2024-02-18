@@ -64,6 +64,7 @@ const BlogDetail = () => {
             <div className="col-md-6">
               <div className="small mb-1">
                 <h1 className="fs-2 "> {blog.blogTitle}</h1>
+                <h5 className="fs-2 "> {blog.categories[0]}</h5>
                 <h6 > <span className="badge bg-primary p-1">By Author</span> : {blog.authorName}</h6>
 
               </div>
