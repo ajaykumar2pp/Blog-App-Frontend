@@ -96,7 +96,7 @@ const BlogListing = () => {
               <div className=" mb-5">
               <button
             className="p-2 m-3 text-bg-danger fw-bold rounded rounded-2"
-            onClick={handleAllCategoryClick} // Handle click for "All" category
+            onClick={handleAllCategoryClick} 
           >
             All
           </button>

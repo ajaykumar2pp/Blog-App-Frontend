@@ -16,7 +16,7 @@ const AuthorBlog = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteBlogId, setDeleteBlogId] = useState(null);
   const [error, setError] = useState(null);
-  const [searcherror, setSearcherror] = useState(null);
+  const [searchError, setSearchError] = useState(null);
 
   const userData = JSON.parse(localStorage.getItem("user"));
   const author_id = userData?._id;
@@ -106,9 +106,9 @@ const AuthorBlog = () => {
 
 
   const searchHandle = async (e) => {
-    console.log(e.target.value);
-    const key = e.target.value.trim();
-    console.log(key)
+    // console.log(e.target.value);
+    const key = e.target.value;
+    // console.log(key)
 
     if (key) {
       try {
@@ -122,25 +122,25 @@ const AuthorBlog = () => {
           },
         });
         const data = result.data;
-        console.log(data);
+        // console.log(data);
 
-        if (data && data.length > 1) {
+        if (data && data.length > 0)  {
           setBlogs(data);
-          setSearcherror(null);
-          console.log("Search data:", data);
+          setSearchError(null);
+          // console.log("Search data:", data);
         } else {
-          console.log("No blogs found for the search key:", key);
+          // console.log("No blogs found for the search key:", key);
           setBlogs([]);
-          setSearcherror("No blogs found for the search ");
+          setSearchError("No blogs found for the search key");
         }
       } catch (error) {
         // console.error('Error fetching search results:', error.message);
         setBlogs([]);
-        setSearcherror("No blog found for the search key");
+        setSearchError("No blogs found for the search key");
       }
     } else {
       setBlogs([]);
-      setSearcherror(null);
+      setSearchError(null);
       fetchBlogsByAuthorId();
     }
   };
@@ -176,7 +176,7 @@ const AuthorBlog = () => {
               <div className="col-md-8">
                 <div>
                   {error && <h5 className='text-center text-bg-danger py-3 mt-5'>{error}</h5>}
-                  {searcherror && !error && <h5 className='text-center text-bg-danger py-3 mt-5'>{searcherror}</h5>}
+                  {searchError && !error && <h5 className='text-center text-bg-danger py-3 mt-5'>{searchError}</h5>}
                 </div>
               </div>
             </div>
