@@ -23,16 +23,16 @@ const BlogListing = () => {
   const fetchBlogs = async () => {
     try {
       // Fetch token from localStorage
-      const token = JSON.parse(localStorage.getItem("user")).token
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user ? user.token : null;
 
-      const response = await api.get("/blog",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          params: { category: selectedCategory }
-        });
+      const response = await api.get("/blog", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        params: { category: selectedCategory },
+      });
 
       const data = response.data;
       if (response.status === 200) {
@@ -57,6 +57,8 @@ const BlogListing = () => {
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
+      // If categories fetching fails, set an empty array
+      setCategories([]);
     }
   };
 
@@ -94,16 +96,18 @@ const BlogListing = () => {
           <div className="row">
             <div className="col-md-12">
               <div className=" mb-5">
-              <button
-            className="p-2 m-3 text-bg-danger fw-bold rounded rounded-2"
-            onClick={handleAllCategoryClick} 
-          >
-            All
-          </button>
-                {categories.map(category => (
+              {categories.length > 0 && ( // Only render the "All" button if categories are fetched successfully
+                <button
+                  className="p-2 m-3 text-bg-danger fw-bold rounded rounded-2"
+                  onClick={handleAllCategoryClick} 
+                >
+                  All
+                </button>
+              )}
+                {categories.map((category, index) => (
                   <button
                     className="p-2 m-3 text-bg-danger fw-bold rounded rounded-2"
-                    key={category}
+                    key={index}
                     value={category}
                     onClick={() => handleCategoryClick(category)}
                     >
@@ -124,10 +128,9 @@ const BlogListing = () => {
                   onChange={handleCategoryChange}
                 >
                   <option value="All">All</option>
-                  {categories.map(category => (
-                    <option key={category} value={category}>
+                  {categories.map((category, index) => (
+                    <option key={index} value={category}>
                       {formatCategory(category)}
-                      {/* {category} */}
                     </option>
                   ))}
                 </select>
@@ -171,6 +174,4 @@ const BlogListing = () => {
   )
 }
 
-export default BlogListing
-
-
+export default BlogListing;
