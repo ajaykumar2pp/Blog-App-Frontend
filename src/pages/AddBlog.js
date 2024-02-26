@@ -9,13 +9,13 @@ const AddBlog = () => {
   const [blogTitle, setBlogTitle] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [content, setContent] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
   const [image, setImage] = useState(null)
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(false)
   const navigate = useNavigate();
 
-  const categories = ["Technology", "Sport", "Education", "News", "Medical","Other"];
+  // const categories = ["Technology", "Sport", "Education", "News", "Medical","Other"];
 
   const handleFileChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -31,16 +31,18 @@ const AddBlog = () => {
     setImage(selectedImage);
   };
 
-  const handleCategoriesChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-    setSelectedCategories(selectedOptions);
+  const handleCategory = (e) => {
+    let enteredCategory = e.target.value.trim(); 
+  
+    enteredCategory = enteredCategory.charAt(0).toUpperCase() + enteredCategory.slice(1).toLowerCase();
+    setCategoryName(enteredCategory);
   };
 
 
   const handleSave = async (e) => {
-    console.log(blogTitle, authorName, content, image, selectedCategories);
+    console.log(blogTitle, authorName, content, image, categoryName);
     e.preventDefault();
-    if (!blogTitle || !authorName || !content || !image|| !selectedCategories) {
+    if (!blogTitle || !authorName || !content || !image || !categoryName) {
       setError(true)
       return false;
     }
@@ -62,7 +64,7 @@ const AddBlog = () => {
       formData.append("content", content);
       formData.append("author_id", author_id);
       formData.append("image", image);
-      formData.append("categories", JSON.stringify(selectedCategories));
+      formData.append("categories", categoryName);
 
       const response = await api.post("/blog/add-blog",
         formData, {
@@ -87,9 +89,10 @@ const AddBlog = () => {
     setBlogTitle("");
     setAuthorName("");
     setContent("");
-    setSelectedCategories([]);
+    setCategoryName("");
     setImage(null);
     setImagePreview(null);
+    setError(false);
   };
 
 
@@ -155,17 +158,18 @@ const AddBlog = () => {
               </div>
               {/* catgeories  */}
               <div className="mb-3">
-                <label htmlFor="name" className="form-label fw-bold">Select Categories:</label>
-                <select multiple className="form-select"
-                 id="categories"
-                 value={selectedCategories}
-                 onChange={handleCategoriesChange}
-                  >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-                {error && !selectedCategories.length===0 && <div className="valid text-danger">Please select at least one category</div>}
+                <label htmlFor="category" className="form-label fw-bold">Category</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="category"
+                  name="category"
+                  placeholder="Enter Category"
+                  aria-describedby="categoryName"
+                  value={categoryName}
+                  onChange={handleCategory}
+                />
+                {error && !categoryName && <div className="valid text-danger">Please enter a category</div>}
               </div>
               {/* Image uplaod */}
               <div className="mb-3">

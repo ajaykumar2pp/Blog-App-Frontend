@@ -54,6 +54,7 @@ const BlogListing = () => {
   const fetchCategories = async () => {
     try {
       const response = await api.get("/categories");
+      // console.log(response)
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -75,9 +76,7 @@ const BlogListing = () => {
   };
   
 
-  const formatCategory = (category) => {
-    return category.replace(/["\[\]]/g, '');
-  };
+
 
   return (
     <>
@@ -111,7 +110,7 @@ const BlogListing = () => {
                     value={category}
                     onClick={() => handleCategoryClick(category)}
                     >
-                    {formatCategory(category)}
+                    {category}
                   </button>
                 ))}
               </div>
@@ -130,7 +129,7 @@ const BlogListing = () => {
                   <option value="All">All</option>
                   {categories.map((category, index) => (
                     <option key={index} value={category}>
-                      {formatCategory(category)}
+                      {category}
                     </option>
                   ))}
                 </select>

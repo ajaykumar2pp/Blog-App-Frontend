@@ -11,46 +11,44 @@ import { FaArrowDownWideShort } from "react-icons/fa6";
 
 const AuthorBlog = () => {
   const [blogs, setBlogs] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [openBlogId, setOpenBlogId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteBlogId, setDeleteBlogId] = useState(null);
   const [error, setError] = useState(null);
-  const [searchError, setSearchError] = useState(null);
 
   const userData = JSON.parse(localStorage.getItem("user"));
   const author_id = userData?._id;
 
+  useEffect(() => {
+    if (search === "") {
+      getAllBlog();
+    } else {
+      getSearchBlog();
+    }
+  }, [search]);
 
-  const fetchBlogsByAuthorId = async () => {
+  const getAllBlog = async () => {
     try {
-      // Fetch token from localStorage
-      const token = JSON.parse(localStorage.getItem("user")).token
-
+      const token = JSON.parse(localStorage.getItem("user")).token;
       if (!author_id) {
         console.log('Author ID not found in localStorage');
         return;
-      } else {
-        console.log('Author ID found in localStorage');
       }
-      const response = await api.get(`/blog/author/${author_id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const response = await api.get(`/blog/author/${author_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = response.data;
-      console.log(data);
-
       if (data.data && data.data.blogs && data.data.blogs.length > 0) {
         setBlogs(data.data.blogs);
-        console.log("API response data:", data.data.blogs);
         setError(null);
       } else {
-        console.log('No blog found for the specified author_id');
-        setBlogs([])
-        setError('No blogs . Please Add Blog');
+        setBlogs([]);
+        setError('No blogs. Please add a blog.');
       }
     } catch (error) {
       console.error('Error fetching blog by author_id:', error);
@@ -73,19 +71,15 @@ const AuthorBlog = () => {
   const confirmDeleteBlog = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
-
       const response = await api.delete(`/blog/${deleteBlogId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("Delete Blog", response.data);
-
       if (response.status === 204) {
-        toast.success('Delete Blog Successfully!');
-        fetchBlogsByAuthorId();
+        toast.success('Blog deleted successfully!');
+        getAllBlog();
       } else {
         toast.error('Failed to delete the blog. Please try again.');
       }
@@ -97,24 +91,11 @@ const AuthorBlog = () => {
     }
   };
 
-
-
-
-  useEffect(() => {
-    fetchBlogsByAuthorId();
-  }, []);
-
-
-  const searchHandle = async (e) => {
-    // console.log(e.target.value);
+  const getSearchBlog = async (e) => {
     const key = e.target.value;
-    // console.log(key)
-
     if (key) {
       try {
-        // Fetch token from localStorage
-        const token = JSON.parse(localStorage.getItem("user")).token
-
+        const token = JSON.parse(localStorage.getItem("user")).token;
         const result = await api.get(`/search/${key}`, {
           headers: {
             "Content-Type": "application/json",
@@ -122,29 +103,23 @@ const AuthorBlog = () => {
           },
         });
         const data = result.data;
-        // console.log(data);
-
-        if (data && data.length > 0)  {
+        if (data && data.length > 0) {
           setBlogs(data);
-          setSearchError(null);
-          // console.log("Search data:", data);
         } else {
-          // console.log("No blogs found for the search key:", key);
           setBlogs([]);
-          setSearchError("No blogs found for the search key");
+          setError('No blogs found for the search key.');
         }
       } catch (error) {
         // console.error('Error fetching search results:', error.message);
+        setError('No blogs found for the search key.');
         setBlogs([]);
-        setSearchError("No blogs found for the search key");
       }
     } else {
       setBlogs([]);
-      setSearchError(null);
-      fetchBlogsByAuthorId();
+      setSearch(""); ;
+      getAllBlog();
     }
   };
-
 
   return (
     <>
@@ -153,35 +128,28 @@ const AuthorBlog = () => {
           <h5 className='text-center text-bg-secondary py-3'>Loading Author Blogs Page...</h5>
         ) : (
           <div>
-
-            {/*   Search Blog  */}
             <div className="row justify-content-center mt-3 mb-3">
               <div className="col-sm-8">
                 <div>
                   <h5 className="text-center mt-3">Blog By Author </h5>
                 </div>
-
                 <input
                   type="text"
                   className="form-control"
-                  onChange={searchHandle}
+                  onChange={(e) => getSearchBlog(e)}
                   id="inputSearch"
                   placeholder="🔍 Search Your Blog"
                   autoFocus
                 />
               </div>
             </div>
-            {/* Show Error Blog Not Found */}
             <div className="row mt-3 mb-3 justify-content-center">
               <div className="col-md-8">
                 <div>
                   {error && <h5 className='text-center text-bg-danger py-3 mt-5'>{error}</h5>}
-                  {searchError && !error && <h5 className='text-center text-bg-danger py-3 mt-5'>{searchError}</h5>}
                 </div>
               </div>
             </div>
-
-            {/* blog data show */}
             <div className="row gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 mb-5 justify-content-center">
               {blogs && blogs.map((blog) => (
                 <div className="col mb-5" key={blog._id}>
@@ -203,22 +171,19 @@ const AuthorBlog = () => {
                           className="btn btn-outline-dark mt-auto ml-2 btn-setting ">
                           <FaArrowDownWideShort />
                         </button>
-
                         {openBlogId === blog._id && (
-                          <div className="options-list mt-4 position-absolute"> 
+                          <div className="options-list mt-4 position-absolute">
                             <ul className="list-group ">
                               <Link to={"/blog/update-blog/" + blog._id}
                                 className="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-body-secondary">
                                 Update
                                 <span className="ms-2"><BiSolidEdit /></span>
                               </Link>
-                             
                               <button onClick={() => handleDeleteClick(blog._id)}
                                 className="list-group-item list-group-item-action  d-flex justify-content-between align-items-center bg-body-secondary">
                                 Delete
                                 <span className="ms-2"><FaTrashCan /></span>
                               </button>
-
                             </ul>
                           </div>
                         )}
@@ -231,7 +196,6 @@ const AuthorBlog = () => {
           </div>
         )}
       </div>
-
       <section>
         <div className="container-fluid">
           <div className="row">
@@ -241,14 +205,14 @@ const AuthorBlog = () => {
                   <Modal.Title>Delete Blog Permanently?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  Are you  want to delete this blog.
+                  Are you sure you want to delete this blog?
                 </Modal.Body>
                 <Modal.Footer>
                   <button className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>
                     Cancel
                   </button>
                   <button className="btn btn-danger" onClick={confirmDeleteBlog}>
-                    Delete permenently
+                    Delete Permanently
                   </button>
                 </Modal.Footer>
               </Modal>
@@ -256,7 +220,6 @@ const AuthorBlog = () => {
           </div>
         </div>
       </section>
-
     </>
   )
 }
