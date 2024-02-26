@@ -12,7 +12,7 @@ const UpdateBlog = () => {
   const [authorName, setAuthorName] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
   const [image, setImage] = useState(null)
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,6 @@ const UpdateBlog = () => {
   const params = useParams();
   const userName = JSON.parse(localStorage.getItem("user")).username;
  
-  const categories = ["Technology", "Sport", "Education", "News", "Medical","Other"];
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -58,7 +57,7 @@ const UpdateBlog = () => {
       setContent(data.content);
       setAuthorName(data.authorName);
       setImageUrl(data.image);
-      setSelectedCategories(data.categories);
+      setCategoryName(data.categories);
     } catch (error) {
       toast.error(`Error logging in: ${error.message}`);
       console.error("Error fetching product data:", error);
@@ -66,14 +65,16 @@ const UpdateBlog = () => {
     }
   };
 
-  const handleCategoryChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-    setSelectedCategories(selectedOptions);
+  const handleCategory = (e) => {
+    let enteredCategory = e.target.value.trim(); 
+  
+    enteredCategory = enteredCategory.charAt(0).toUpperCase() + enteredCategory.slice(1).toLowerCase();
+    setCategoryName(enteredCategory);
   };
 
   const updateBlog  = async (e) => {
     e.preventDefault();
-    console.log(blogTitle, authorName, content, image,selectedCategories);
+    console.log(blogTitle, authorName, content, image, categoryName );
     // if (!blogTitle || !authorName || !content || !image || !selectedCategories) {
     //   toast.error('All fields are required!');
     //   return;
@@ -87,7 +88,7 @@ const UpdateBlog = () => {
       formData.append("authorName", authorName);
       formData.append("content", content);
       formData.append("image", image);
-      formData.append("categories", JSON.stringify(selectedCategories));
+      formData.append("categories", categoryName);
 
       // Fetch token from localStorage
       const token = JSON.parse(localStorage.getItem("user")).token
@@ -114,7 +115,7 @@ const UpdateBlog = () => {
     setBlogTitle("");
     setAuthorName("");
     setContent("");
-    setSelectedCategories([]);
+    setCategoryName("");
     setImage(null);
     setImagePreview(null);
   };
@@ -180,24 +181,21 @@ const UpdateBlog = () => {
               />
 
             </div>
-            {/* selected category */}
+            {/* category */}
             <div className="mb-3">
-            <label htmlFor="categories" className="form-label fw-bold">
-                Selected Category
-              </label>
-              <select multiple
-                className="form-select"
-                id="categories"
-                value={selectedCategories}
-                onChange={handleCategoryChange}
-              >
-               {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <label htmlFor="category" className="form-label fw-bold">Category</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="category"
+                  name="category"
+                  placeholder="Enter Category"
+                  aria-describedby="categoryName"
+                  value={categoryName}
+                  onChange={handleCategory}
+                />
+               
+              </div>
             {/* Image uplaod */}
             <div className="mb-3">
               <label htmlFor="name" className="form-label fw-bold">

@@ -15,8 +15,6 @@ const AddBlog = () => {
   const [error, setError] = useState(false)
   const navigate = useNavigate();
 
-  // const categories = ["Technology", "Sport", "Education", "News", "Medical","Other"];
-
   const handleFileChange = (e) => {
     const selectedImage = e.target.files[0];
 
@@ -156,7 +154,7 @@ const AddBlog = () => {
                 />
                 {error && !content && <div className="valid text-danger">Plz valid content</div>}
               </div>
-              {/* catgeories  */}
+              {/* catgeory  */}
               <div className="mb-3">
                 <label htmlFor="category" className="form-label fw-bold">Category</label>
                 <input
